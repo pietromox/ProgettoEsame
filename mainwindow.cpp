@@ -1,5 +1,4 @@
 
-
 #include "mainwindow.h"
 #include <iostream>
 #include "ui_mainwindow.h"
@@ -7,6 +6,7 @@
 #include "QTime"
 #include "QTimeEdit"
 #include "QMainWindow"
+#include "stringGenerator.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -14,16 +14,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     timer = new QTimer(this);
-
-
-
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(updateHour()));
-
     timer->start(1000);
-
     timer2 = new QTimer(this);
     QObject::connect(timer2, SIGNAL(timeout()), this, SLOT(startTimer()));
-
     ui->date->setText(QDate::currentDate().toString("dd.MM.yy"));
 
 }
@@ -50,7 +44,7 @@ void MainWindow::updateHour()
         }
         else
         {
-          ui->amPmLabel->setText("PM");
+            ui->amPmLabel->setText("PM");
         }
 
     }
@@ -60,36 +54,9 @@ void MainWindow::updateHour()
 
 
 
-
-
 void MainWindow::updateLabel(int hour, int minutes, int seconds){
-    QString string;
-    if(hour < 10){
-        string.append(QString::number(0));
-        string.append(QString::number(hour));
-    }
-    else{
-        string.append(QString::number(hour));
-    }
 
-    string.append(":");
-
-    if(minutes <10){
-        string.append(QString::number(0));
-        string.append(QString::number(minutes));
-    }
-    else{
-        string.append(QString::number(minutes));
-    }
-    string.append(":");
-    if(seconds<10){
-        string.append(QString::number(0));
-        string.append(QString::number(seconds));
-    }
-    else{
-        string.append(QString::number(seconds));
-    }
-    ui->timer->setText(string);
+    ui->timer->setText(stringGenerator::labelString(hour, minutes, seconds, timeEditLabel));
 
 }
 
@@ -129,7 +96,7 @@ void MainWindow::on_timerButton_clicked()
 
     if(stopButton==false){
         if(!timerStarted){
-        updateStaticVariables();
+            updateTimeVariables();
         }
         timerStarted = true;
         ui->timerButton->setText("STOP");
@@ -148,7 +115,7 @@ void MainWindow::on_timerButton_clicked()
 
 }
 
-void MainWindow::updateStaticVariables(){
+void MainWindow::updateTimeVariables(){
     hour = ui->timeEdit->time().hour();
     minutes = ui->timeEdit->time().minute();
     seconds = ui->timeEdit->time().second();
@@ -157,7 +124,7 @@ void MainWindow::updateStaticVariables(){
 void MainWindow::on_timeEdit_timeChanged()
 {
     updateLabel(ui->timeEdit->time().hour(), ui->timeEdit->time().minute(), ui->timeEdit->time().second());
-    updateStaticVariables();
+    updateTimeVariables();
 }
 
 
@@ -166,7 +133,7 @@ void MainWindow::on_pushButton_clicked()
 {
     updateLabel();
     timer2->stop();
-    updateStaticVariables();
+    updateTimeVariables();
     seconds++;
     timerStarted = false;
     stopButton = false;
@@ -178,33 +145,35 @@ void MainWindow::on_changeTimeFormat_clicked()
 {
     if(!amPm){
         amPm = true;
+        ui->changeTimeFormat->setText("24h");
     }
-    else
+    else{
+        ui->changeTimeFormat->setText("AM/PM");
         amPm = false;
+    }
 
 
 }
 
 void MainWindow::on_dateFormat_clicked()
 {
-
-    if(formatStatus == 0){
-        formatStatus = 1;
+    switch(formatStatus){
+    case EUROPEAN:
+        formatStatus = AMERICAN;
         ui->date->setText(QDate::currentDate().toString("MM:dd:yyyy"));
         ui->dateFormat->setText("passa al formato ISO");
-        return;
-    }
-    if(formatStatus==1){
-        formatStatus=2;
+        break;
+    case AMERICAN:
+        formatStatus=ISO;
         ui->date->setText(QDate::currentDate().toString("yyyy:MM:dd"));
 
         ui->dateFormat->setText("passa al formato standard");
-        return;
-    }
-    if(formatStatus==2){
-        formatStatus=0;
+        break;
+    case ISO:
+        formatStatus=EUROPEAN;
         ui->date->setText(QDate::currentDate().toString("dd.MM.yy"));
         ui->dateFormat->setText("passa al formato americano");
-        return;
+        break;
     }
 }
+

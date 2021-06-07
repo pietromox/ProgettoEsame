@@ -7,6 +7,14 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+enum format{
+    EUROPEAN,
+    AMERICAN,
+    ISO
+};
+
+
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -21,11 +29,10 @@ private slots:
     void on_timerButton_clicked();
     void updateLabel(int hour=0, int minutes=0, int seconds=0);
     void startTimer();
-    void updateStaticVariables();
+    void updateTimeVariables();
     void on_timeEdit_timeChanged();
     void on_pushButton_clicked();
     void on_changeTimeFormat_clicked();
-
     void on_dateFormat_clicked();
 
 private:
@@ -36,9 +43,11 @@ private:
     bool timerStarted = false;
     bool stopButton = false;
     bool amPm = false;
-    int formatStatus = 0;
-
+    format formatStatus = EUROPEAN;
+    QString timeEditLabel;
 
 
 };
+
+
 #endif // MAINWINDOW_H
