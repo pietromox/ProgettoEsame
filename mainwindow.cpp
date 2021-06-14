@@ -158,19 +158,19 @@ void MainWindow::on_changeTimeFormat_clicked()
 void MainWindow::on_dateFormat_clicked()
 {
     switch(formatStatus){
-    case EUROPEAN:
-        formatStatus = AMERICAN;
+    case format::EUROPEAN:
+        formatStatus = format::AMERICAN;
         ui->date->setText(QDate::currentDate().toString("MM:dd:yyyy"));
         ui->dateFormat->setText("passa al formato ISO");
         break;
-    case AMERICAN:
-        formatStatus=ISO;
+    case format::AMERICAN:
+        formatStatus= format::ISO;
         ui->date->setText(QDate::currentDate().toString("yyyy:MM:dd"));
 
         ui->dateFormat->setText("passa al formato standard");
         break;
-    case ISO:
-        formatStatus=EUROPEAN;
+    case format::ISO:
+        formatStatus= format::EUROPEAN;
         ui->date->setText(QDate::currentDate().toString("dd.MM.yy"));
         ui->dateFormat->setText("passa al formato americano");
         break;

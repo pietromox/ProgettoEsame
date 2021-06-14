@@ -7,7 +7,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-enum format{
+enum class format{
     EUROPEAN,
     AMERICAN,
     ISO
@@ -43,7 +43,7 @@ private:
     bool timerStarted = false;
     bool stopButton = false;
     bool amPm = false;
-    format formatStatus = EUROPEAN;
+    format formatStatus = format::EUROPEAN;
     QString timeEditLabel;
 
 
